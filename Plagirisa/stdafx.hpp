@@ -9,6 +9,18 @@
 #ifndef STDAFX_HPP
 #define STDAFX_HPP
 
-// TODO: Include wxWidgets' include files here
+#include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+#define WX_PRECOMP
+#warning "Ensure precompiled headers are supported. "
+         "Otherwise, #undef WX_PRECOMP"
+#endif // WX_PRECOMP
+
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif // WX_PRECOMP
+
+#define _UNICODE
 
 #endif // STDAFX_HPP

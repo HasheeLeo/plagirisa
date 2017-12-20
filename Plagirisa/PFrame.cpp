@@ -11,17 +11,21 @@
 
 #include <wx/button.h>
 #include <wx/sizer.h>
-#include <wx/textctrl.h>
 
 PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	long style)
 	: wxFrame(nullptr, wxID_ANY, title, pos, size, style)
 {
+	// Create and add the controls
 	wxBoxSizer *horizSizer = new wxBoxSizer(wxHORIZONTAL);
 	horizSizer->AddSpacer(15);
-	horizSizer->Add(new wxTextCtrl(this, wxID_ANY), 1, wxEXPAND);
+	inputCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, wxTE_MULTILINE);
+	horizSizer->Add(inputCtrl, 1, wxEXPAND);
 	horizSizer->AddSpacer(20);
-	horizSizer->Add(new wxTextCtrl(this, wxID_ANY), 1, wxEXPAND);
+	matchCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, wxTE_MULTILINE);
+	horizSizer->Add(matchCtrl, 1, wxEXPAND);
 	horizSizer->AddSpacer(15);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
@@ -31,4 +35,15 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	topSizer->Add(new wxButton(this, wxID_ANY, "Check"), 0, wxCENTER);
 	topSizer->AddSpacer(10);
 	SetSizer(topSizer);
+}
+
+wxBEGIN_EVENT_TABLE(PFrame, wxFrame)
+	EVT_BUTTON(wxID_ANY, PFrame::onCheck)
+wxEND_EVENT_TABLE()
+
+void PFrame::onCheck(wxCommandEvent &event) {
+	std::string haystack = inputCtrl->GetValue();
+	std::string needle = matchCtrl->GetValue();
+	// TODO: Add call to Rabin-Karp string match here and with the returned
+	// indices, highlight the words in inputCtrl
 }

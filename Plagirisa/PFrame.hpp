@@ -10,11 +10,21 @@
 #define PFRAME_HPP
 
 #include <wx/frame.h>
+#include <wx/textctrl.h>
 
 class PFrame : public wxFrame {
 public:
 	PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 		long style = wxDEFAULT_FRAME_STYLE);
+
+private:
+	wxTextCtrl *inputCtrl;
+	wxTextCtrl *matchCtrl;
+
+	// Handlers
+	void onCheck(wxCommandEvent &event);
+
+	wxDECLARE_EVENT_TABLE();
 };
 
 #endif // PFRAME_HPP

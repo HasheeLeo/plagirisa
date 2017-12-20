@@ -9,9 +9,6 @@
 #include "stdafx.hpp"
 #include "PFrame.hpp"
 
-#include <wx/button.h>
-#include <wx/sizer.h>
-
 #include <string>
 
 PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,

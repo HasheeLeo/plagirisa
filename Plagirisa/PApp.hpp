@@ -1,18 +1,19 @@
 /*******************************************************************************
-    File: main.cpp
-    Purpose: Defines the main() function of the app.
+    File: PApp.hpp
+    Purpose: Defines the entry point of the app.
 
     This file is property of Hashir Ahmad and Daud Akhtar Naveed from SEECS,
     NUST batch of 2k16, section 6C.
 *******************************************************************************/
 
-#include "stdafx.hpp"
+#ifndef PAPP_HPP
+#define PAPP_HPP
 
-#include <iostream>
+#include <wx/app.h>
 
-int main() {
-	using namespace std;
-	cout << "Welcome to Plagirisa\n";
-	cin.get();
-	return 0;
-}
+class PApp : public wxApp {
+public:
+	virtual bool OnInit();
+};
+
+#endif // PAPP_HPP

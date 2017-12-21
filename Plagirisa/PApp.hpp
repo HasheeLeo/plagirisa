@@ -9,6 +9,8 @@
 #ifndef PAPP_HPP
 #define PAPP_HPP
 
+#include <wx/app.h>
+
 class PApp : public wxApp {
 public:
 	virtual bool OnInit();

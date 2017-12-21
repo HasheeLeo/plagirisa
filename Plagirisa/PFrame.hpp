@@ -9,6 +9,9 @@
 #ifndef PFRAME_HPP
 #define PFRAME_HPP
 
+#include <wx/frame.h>
+#include <wx/textctrl.h>
+
 class PFrame : public wxFrame {
 public:
 	PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,

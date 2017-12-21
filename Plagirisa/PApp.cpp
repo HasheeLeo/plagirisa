@@ -11,6 +11,7 @@
 #include "PApp.hpp"
 
 #include <wx/display.h>
+#include <wx/string.h>
 
 extern const wxString APP_NAME = "Plagirisa";
 

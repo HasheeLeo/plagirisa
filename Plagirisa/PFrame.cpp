@@ -44,8 +44,8 @@ wxBEGIN_EVENT_TABLE(PFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 void PFrame::onCheck(wxCommandEvent &event) {
-	const std::string haystack = inputCtrl->GetValue();
-	const std::string needle = matchCtrl->GetValue();
+	const char *haystack = inputCtrl->GetValue();
+	const char *needle = matchCtrl->GetValue();
 	// TODO: Add call to Rabin-Karp string match here and with the returned
 	// indices, highlight the words in inputCtrl
 }

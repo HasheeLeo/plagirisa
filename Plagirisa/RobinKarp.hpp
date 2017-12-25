@@ -13,13 +13,9 @@ using namespace std;
 #define numberOfAlphas 256
 #define primeNumber 101
 
-// Function to calculate hash of a given string.
-double calculateHash(const string &input)
+// Function to calculate mod value of two integers.
+// Even if the value of a is negative, output is correct.
+int calculateMod(int a, int b)
 {
-    int hash = 1, i;
-    for (i = 0; i < input.length() - 1; i++)
-    {
-        hash = (hash * numberOfAlphas) % primeNumber;
-    }
-    return hash;
+    return (a % b + b) % b;
 }

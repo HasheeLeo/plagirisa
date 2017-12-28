@@ -248,3 +248,6 @@ ModelManifest.xml
 *.sln
 *.vcxproj
 *.vcxproj.filters
+
+# Visual Studio property files
+*.props

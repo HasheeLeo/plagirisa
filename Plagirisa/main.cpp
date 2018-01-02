@@ -1,18 +1,11 @@
-/*******************************************************************************
-    File: main.cpp
-    Purpose: Defines the main() function of the app.
+// Including libraries.
+#include "rabinkarp_test.hpp"
 
-    This file is property of Hashir Ahmad and Daud Akhtar Naveed from SEECS,
-    NUST batch of 2k16, section 6C.
-*******************************************************************************/
+// Main function to start program execution.
+int main(int argc, char *argv[]) {
 
-#include "stdafx.hpp"
+    rabinkarp_test();
 
-#include <iostream>
-
-int main() {
-	using namespace std;
-	cout << "Welcome to Plagirisa\n";
-	cin.get();
-	return 0;
+    // Return 0 to terminate program.
+    return 0;
 }

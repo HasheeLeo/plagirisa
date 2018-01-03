@@ -19,13 +19,13 @@ using namespace std;
 std::vector<int> rabinkarp_find(std::string pattern, std::string text)
 {
     // Local variables.
-    auto patternLength = static_cast<int>(pattern.length());            // For pattern length.
-    auto textLength = static_cast<int>(text.length());                  // For text length.
-    int i, j;                                                           // To use in loops.
-    int patternHash = 0;                                                // Hash value for pattern.
-    int textHash = 0;                                                   // Hash value for text.
-    int hash = 1;                                                       // To store value of h.
-    std::vector <int> indices;                                          // Vector to store indices.
+    auto patternLength = static_cast<int>(pattern.length());
+    auto textLength = static_cast<int>(text.length());
+    int i, j;
+    int patternHash = 0;
+    int textHash = 0;
+    int hash = 1;
+    std::vector <int> indices;
 
     // The value of h would be "pow(d, M-1)%q"
     for (i = 0; i < patternLength-1; i++)
@@ -66,7 +66,8 @@ std::vector<int> rabinkarp_find(std::string pattern, std::string text)
         // leading digit, add trailing digit.
         if ( i < textLength - patternLength )
         {
-            textHash = (NUMBER_ALPHABETS*(textHash - text[i]*hash) + text[i+patternLength])%PRIME_NUMBER;
+            textHash = (NUMBER_ALPHABETS*(textHash - text[i]*hash) +
+				text[i+patternLength])%PRIME_NUMBER;
 
             // We might get negative value of t, converting it
             // to positive

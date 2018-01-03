@@ -14,8 +14,8 @@
 std::vector<int> rabinkarp(const std::string &text, const std::string &pattern)
 {
     // Local variables.
-    auto patternLength = static_cast<int>(pattern.length());
-    auto textLength = static_cast<int>(text.length());
+    int patternLength = pattern.length();
+    int textLength = text.length();
     int i, j;
     int patternHash = 0;
     int textHash = 0;

@@ -8,11 +8,13 @@
 
 #include "stdafx.hpp"
 #include "PFrame.hpp"
+#include "rabinkarp.hpp"
 
 #include <wx/button.h>
 #include <wx/sizer.h>
 
 #include <string>
+#include <vector>
 
 PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	long style)
@@ -22,11 +24,11 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	wxBoxSizer *horizSizer = new wxBoxSizer(wxHORIZONTAL);
 	horizSizer->AddSpacer(15);
 	inputCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, wxTE_MULTILINE);
+		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
 	horizSizer->Add(inputCtrl, 1, wxEXPAND);
 	horizSizer->AddSpacer(20);
 	matchCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, wxTE_MULTILINE);
+		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
 	horizSizer->Add(matchCtrl, 1, wxEXPAND);
 	horizSizer->AddSpacer(15);
 
@@ -44,8 +46,15 @@ wxBEGIN_EVENT_TABLE(PFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 void PFrame::onCheck(wxCommandEvent &event) {
-	const char *haystack = inputCtrl->GetValue();
-	const char *needle = matchCtrl->GetValue();
-	// TODO: Add call to Rabin-Karp string match here and with the returned
-	// indices, highlight the words in inputCtrl
+	const std::string haystack((inputCtrl->GetValue()).c_str());
+	const std::string needle((matchCtrl->GetValue()).c_str());
+	// Remove last highlights
+	wxTextAttr textAttr;
+	textAttr.SetBackgroundColour(*wxWHITE);
+	inputCtrl->SetStyle(0, haystack.length(), textAttr);
+	// Add new highlights
+	textAttr.SetBackgroundColour(*wxYELLOW);
+	const std::vector<int> indices = rabinkarp(haystack, needle);
+	for (int i : indices)
+		inputCtrl->SetStyle(i, i + needle.length(), textAttr);
 }

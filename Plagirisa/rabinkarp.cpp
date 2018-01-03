@@ -1,3 +1,11 @@
+/*******************************************************************************
+    File: rabinkarp.cpp
+    Purpose: Implements the Rabin-Karp algorithm.
+
+    This file is property of Hashir Ahmad and Daud Akhtar Naveed from SEECS,
+    NUST batch of 2k16, section 6C.
+*******************************************************************************/
+
 // Including libraries.
 #include "rabinkarp.hpp"
 #include <iostream>

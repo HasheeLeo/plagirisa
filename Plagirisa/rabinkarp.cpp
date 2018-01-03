@@ -6,6 +6,7 @@
     NUST batch of 2k16, section 6C.
 *******************************************************************************/
 
+#include "stdafx.hpp"
 #include "rabinkarp.hpp"
 
 #define PRIME_NUMBER 101

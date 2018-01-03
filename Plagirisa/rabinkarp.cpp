@@ -13,8 +13,7 @@ using namespace std;
 #define PRIME_NUMBER 101
 #define NUMBER_ALPHABETS 256
 
-// Function rabinkarp_find to search a pattern in a text.
-std::vector<int> rabinkarp_find(std::string pattern, std::string text)
+std::vector<int> rabinkarp(const std::string &text, const std::string &pattern)
 {
     // Local variables.
     auto patternLength = static_cast<int>(pattern.length());

@@ -6,13 +6,12 @@
     NUST batch of 2k16, section 6C.
 *******************************************************************************/
 
-#ifndef rabinkarp
-#define rabinkarp
+#ifndef RABINKARP_HPP
+#define RABINKARP_HPP
 
-// Including libraries.
 #include <vector>
 #include <string>
 
 std::vector<int> rabinkarp_find(std::string pattern, std::string text);
 
-#endif
+#endif // RABINKARP_HPP

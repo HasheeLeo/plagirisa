@@ -6,12 +6,10 @@
     NUST batch of 2k16, section 6C.
 *******************************************************************************/
 
-// Including libraries.
 #include "rabinkarp.hpp"
 #include <iostream>
 using namespace std;
 
-// Macros and constants.
 #define PRIME_NUMBER 101
 #define NUMBER_ALPHABETS 256
 

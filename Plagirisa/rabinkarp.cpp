@@ -7,8 +7,6 @@
 *******************************************************************************/
 
 #include "rabinkarp.hpp"
-#include <iostream>
-using namespace std;
 
 #define PRIME_NUMBER 101
 #define NUMBER_ALPHABETS 256
@@ -53,10 +51,8 @@ std::vector<int> rabinkarp(const std::string &text, const std::string &pattern)
             }
 
             // If p == t and pat[0...M-1] = txt[i, i+1, ...i+M-1].
-            if (j == patternLength) {
-                printf("Pattern found at index %d \n", i);
+            if (j == patternLength)
                 indices.push_back(i);
-            }
         }
 
         // Calculate hash value for next window of text: Remove

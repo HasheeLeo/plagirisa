@@ -6,6 +6,7 @@
     NUST batch of 2k16, section 6C.
 *******************************************************************************/
 
+#include "rabinkarp_test.hpp"
 #include "../rabinkarp.hpp"
 
 #include <iostream>

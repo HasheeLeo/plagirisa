@@ -9,65 +9,58 @@
 #include "stdafx.hpp"
 #include "rabinkarp.hpp"
 
-#define PRIME_NUMBER 101
-#define NUMBER_ALPHABETS 256
+#include <cmath>
+
+static constexpr int NUM_ALPHABETS = 127;
+
+inline static uint rabinkarp_hashslide(uint lastHash, char prevChar,
+	char nextChar, size_t patternLength)
+{
+	uint hash = lastHash - (prevChar * pow(NUM_ALPHABETS, patternLength - 1));
+	hash *= NUM_ALPHABETS;
+	hash += nextChar;
+	return hash;
+}
+
+static uint rabinkarp_hash(const std::string &word) {
+	const int wordSize = word.length();
+	uint hash = 0;
+	for (int i = 0; i < wordSize; ++i)
+		hash += word[i] * pow(NUM_ALPHABETS, wordSize - i - 1);
+
+	return hash;
+}
 
 std::vector<int> rabinkarp(const std::string &text, const std::string &pattern)
 {
-    // Local variables.
-    int patternLength = pattern.length();
-    int textLength = text.length();
-    int i, j;
-    int patternHash = 0;
-    int textHash = 0;
-    int hash = 1;
-    std::vector <int> indices;
+	std::vector<int> indices;
+	const int patternHash = rabinkarp_hash(pattern);
+	const int textLength = text.length();
+	const int patternLength = pattern.length();
+	int curHash = -1;
 
-    // The value of h would be "pow(d, M-1)%q"
-    for (i = 0; i < patternLength-1; i++)
-        hash = (hash*NUMBER_ALPHABETS)%PRIME_NUMBER;
+	for (int i = 0; i < textLength - patternLength + 1; ++i) {
+		// If we have calculated a hash last time, slide hash
+		if (curHash != -1)
+			curHash = rabinkarp_hashslide(curHash, text[i - 1],
+				text[i + patternLength - 1], patternLength);
+		else
+			curHash = rabinkarp_hash(text.substr(i, patternLength));
 
-    // Calculate the hash value of pattern and first
-    // window of text of size equal to pattern.
-    for (i = 0; i < patternLength; i++)
-    {
-        patternHash = (NUMBER_ALPHABETS*patternHash + pattern[i])%PRIME_NUMBER;
-        textHash = (NUMBER_ALPHABETS*textHash + text[i])%PRIME_NUMBER;
-    }
+		// If hashes match, match the words character by character to ensure it
+		// was not a hash collision
+		if (curHash == patternHash) {
+			bool matched = true;
+			for (int j = 0; j < patternLength; ++j) {
+				if (text[i + j] != pattern[j]) {
+					matched = false;
+					break;
+				}
+			}
 
-    // Slide the pattern over text one by one
-    for (i = 0; i <= textLength - patternLength; i++)
-    {
-        // Check the hash values of current window of text
-        // and pattern. If the hash values match then only
-        // check for characters on by one
-        if ( patternHash == textHash )
-        {
-            // Check for characters one by one.
-            for (j = 0; j < patternLength; j++)
-            {
-                // If no character match is found break the loop.
-                if (text[i+j] != pattern[j])
-                    break;
-            }
-
-            // If p == t and pat[0...M-1] = txt[i, i+1, ...i+M-1].
-            if (j == patternLength)
-                indices.push_back(i);
-        }
-
-        // Calculate hash value for next window of text: Remove
-        // leading digit, add trailing digit.
-        if ( i < textLength - patternLength )
-        {
-            textHash = (NUMBER_ALPHABETS*(textHash - text[i]*hash) +
-				text[i+patternLength])%PRIME_NUMBER;
-
-            // We might get negative value of t, converting it
-            // to positive
-            if (textHash < 0)
-                textHash = (textHash + PRIME_NUMBER);
-        }
-    }
-    return indices;
+			if (matched)
+				indices.push_back(i);
+		}
+	}
+	return indices;
 }

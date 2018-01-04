@@ -23,4 +23,6 @@
 
 #define _UNICODE
 
+using uint = unsigned int;
+
 #endif // STDAFX_HPP

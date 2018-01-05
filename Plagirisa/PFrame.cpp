@@ -18,7 +18,7 @@
 
 // Adds all the needles (delimited by non-alpha characters) to a vector and
 // returns it
-static std::vector<std::string> parseNeedles(const std::string &str) {
+static std::vector<std::string> parse_needles(const std::string &str) {
 	std::vector<std::string> needles;
 	const int strLen = str.length();
 	for (int i = 0; i < strLen; ++i) {
@@ -86,6 +86,7 @@ wxEND_EVENT_TABLE()
 void PFrame::onCheck(wxCommandEvent &event) {
 	const std::string haystack((inputCtrl->GetValue()).c_str());
 	const std::string needles((matchCtrl->GetValue()).c_str());
-	const std::vector<int> indices = rabinkarp(haystack, parseNeedles(needles));
+	const std::vector<int> indices = rabinkarp(haystack,
+		parse_needles(needles));
 	highlightIndices(indices, haystack);
 }

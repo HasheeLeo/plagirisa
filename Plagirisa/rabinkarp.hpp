@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 
-std::vector<int> rabinkarp(const std::string &text, const std::string &pattern);
+std::vector<int> rabinkarp(const std::string &text,
+	const std::vector<std::string> &pattern);
 
 #endif // RABINKARP_HPP

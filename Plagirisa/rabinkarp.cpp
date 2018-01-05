@@ -8,59 +8,23 @@
 
 #include "stdafx.hpp"
 #include "rabinkarp.hpp"
+#include "BloomFilter.hpp"
 
-#include <cmath>
+#include <string>
+#include <vector>
 
-static constexpr int NUM_ALPHABETS = 127;
-
-inline static uint rabinkarp_hashslide(uint lastHash, char prevChar,
-	char nextChar, size_t patternLength)
-{
-	uint hash = lastHash - (prevChar * pow(NUM_ALPHABETS, patternLength - 1));
-	hash *= NUM_ALPHABETS;
-	hash += nextChar;
-	return hash;
-}
-
-static uint rabinkarp_hash(const std::string &word) {
-	const int wordSize = word.length();
-	uint hash = 0;
-	for (int i = 0; i < wordSize; ++i)
-		hash += word[i] * pow(NUM_ALPHABETS, wordSize - i - 1);
-
-	return hash;
-}
-
-std::vector<int> rabinkarp(const std::string &text, const std::string &pattern)
+std::vector<int> rabinkarp(const std::string &text,
+	const std::vector<std::string> &patterns)
 {
 	std::vector<int> indices;
-	const int patternHash = rabinkarp_hash(pattern);
 	const int textLength = text.length();
-	const int patternLength = pattern.length();
-	int curHash = -1;
+	const int patternLength = patterns[0].length();
+	BloomFilter bloomFilter;
+	bloomFilter.insert(patterns);
 
 	for (int i = 0; i < textLength - patternLength + 1; ++i) {
-		// If we have calculated a hash last time, slide hash
-		if (curHash != -1)
-			curHash = rabinkarp_hashslide(curHash, text[i - 1],
-				text[i + patternLength - 1], patternLength);
-		else
-			curHash = rabinkarp_hash(text.substr(i, patternLength));
-
-		// If hashes match, match the words character by character to ensure it
-		// was not a hash collision
-		if (curHash == patternHash) {
-			bool matched = true;
-			for (int j = 0; j < patternLength; ++j) {
-				if (text[i + j] != pattern[j]) {
-					matched = false;
-					break;
-				}
-			}
-
-			if (matched)
-				indices.push_back(i);
-		}
+		if (bloomFilter.exists(text.substr(i, patternLength)))
+			indices.push_back(i);
 	}
 	return indices;
 }

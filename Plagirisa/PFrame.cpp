@@ -54,7 +54,9 @@ void PFrame::onCheck(wxCommandEvent &event) {
 	inputCtrl->SetStyle(0, haystack.length(), textAttr);
 	// Add new highlights
 	textAttr.SetBackgroundColour(*wxYELLOW);
-	const std::vector<int> indices = rabinkarp(haystack, needle);
-	for (int i : indices)
-		inputCtrl->SetStyle(i, i + needle.length(), textAttr);
+
+	// TODO: Fix this to work with new rabinkarp algorithm (multiple patterns)
+	//const std::vector<int> indices = rabinkarp(haystack, needle);
+	//for (int i : indices)
+		//inputCtrl->SetStyle(i, i + needle.length(), textAttr);
 }

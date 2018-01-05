@@ -18,9 +18,19 @@ std::vector<int> rabinkarp(const std::string &text,
 {
 	std::vector<int> indices;
 	const int textLength = text.length();
-	const int patternLength = patterns[0].length();
+	int patternLength = INT_MAX;
+	// Set patternLength to the length of smallest pattern string
+	for (const std::string &str : patterns) {
+		const int curLength = str.length();
+		if (patternLength > curLength)
+			patternLength = curLength;
+	}
 	BloomFilter bloomFilter;
-	bloomFilter.insert(patterns);
+	const int totalPatterns = patterns.size();
+	// Insert only the first n characters of every pattern
+	// n = size of the smallest pattern string
+	for(int i = 0; i < totalPatterns; ++i)
+		bloomFilter.insert(patterns[i].substr(0, patternLength));
 
 	for (int i = 0; i < textLength - patternLength + 1; ++i) {
 		if (bloomFilter.exists(text.substr(i, patternLength)))

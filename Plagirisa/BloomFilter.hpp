@@ -18,13 +18,12 @@ using uint = unsigned int;
 class BloomFilter {
 public:
 	void insert(const std::string &word);
-	void insert(const std::vector<std::string> &words);
 	bool exists(const std::string &word);
 
 	static constexpr int NUM_ALPHABETS = 127;
 private:
 	// Is a prime number
-	static constexpr int bloomSize = 313;
+	static constexpr int bloomSize = 997;
 	std::bitset<bloomSize> table = { 0 };
 	uint curHash = 0;
 	char lastChar = 0;

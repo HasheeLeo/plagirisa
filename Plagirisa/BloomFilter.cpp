@@ -16,11 +16,6 @@ void BloomFilter::insert(const std::string &word) {
 	table[hash(word) % bloomSize] = 1;
 }
 
-void BloomFilter::insert(const std::vector<std::string> &words) {
-	for (const std::string &word : words)
-		insert(word);
-}
-
 bool BloomFilter::exists(const std::string &word)
 {
 	const size_t wordLength = word.length();

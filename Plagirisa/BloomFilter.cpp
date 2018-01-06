@@ -13,7 +13,7 @@
 #include <string>
 
 void BloomFilter::insert(const std::string &word) {
-	table[hash(word) % bloomSize] = 1;
+	table[BloomFilter::hash(word) % BloomFilter::bloomSize] = 1;
 }
 
 bool BloomFilter::exists(const std::string &word)
@@ -22,28 +22,20 @@ bool BloomFilter::exists(const std::string &word)
 	// If the hash has already been calculated, use hash roll
 	// This computes the new hash value from the old hash in O(1)
 	if (!lastChar)
-		curHash = hash(word);
+		curHash = BloomFilter::hash(word);
 	else
-		curHash = hashroll(curHash, lastChar, word[wordLength - 1], wordLength);
+		curHash = BloomFilter::hashroll(curHash, lastChar, word[wordLength - 1],
+			wordLength);
 	
 	lastChar = word[0];
-	return table[curHash % bloomSize];
-}
-
-inline uint BloomFilter::hashroll(uint lastHash, char prevChar, char nextChar,
-	size_t patternLength)
-{
-	uint hash = lastHash - (prevChar * pow(NUM_ALPHABETS, patternLength - 1));
-	hash *= NUM_ALPHABETS;
-	hash += nextChar;
-	return hash;
+	return table[curHash % BloomFilter::bloomSize];
 }
 
 uint BloomFilter::hash(const std::string &word) {
 	const int wordSize = word.length();
 	uint hash = 0;
 	for (int i = 0; i < wordSize; ++i)
-		hash += word[i] * pow(NUM_ALPHABETS, wordSize - i - 1);
+		hash += word[i] * pow(BloomFilter::NUM_ALPHABETS, wordSize - i - 1);
 
 	return hash;
 }

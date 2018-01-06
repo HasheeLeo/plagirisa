@@ -20,17 +20,25 @@ public:
 	void insert(const std::string &word);
 	bool exists(const std::string &word);
 
+	static uint hash(const std::string &word);
+	
+	static inline uint BloomFilter::hashroll(uint lastHash, char prevChar,
+		char nextChar, size_t patternLength)
+	{
+		uint hash = lastHash - (prevChar * pow(BloomFilter::NUM_ALPHABETS,
+			patternLength - 1));
+		hash *= BloomFilter::NUM_ALPHABETS;
+		hash += nextChar;
+		return hash;
+	}
+
 	static constexpr int NUM_ALPHABETS = 127;
 private:
 	// Is a prime number
 	static constexpr int bloomSize = 997;
-	std::bitset<bloomSize> table = { 0 };
+	std::bitset<BloomFilter::bloomSize> table = { 0 };
 	uint curHash = 0;
 	char lastChar = 0;
-
-	uint hash(const std::string &word);
-	inline uint hashroll(uint lastHash, char prevChar, char nextChar,
-		size_t patternLength);
 };
 
 #endif // BLOOMFILTER_HPP

@@ -12,6 +12,9 @@
 #include <wx/frame.h>
 #include <wx/textctrl.h>
 
+#include <string>
+#include <vector>
+
 class PFrame : public wxFrame {
 public:
 	PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
@@ -20,6 +23,9 @@ public:
 private:
 	wxTextCtrl *inputCtrl;
 	wxTextCtrl *matchCtrl;
+
+	void highlightIndices(const std::vector<int> &indices,
+		const std::string &haystack);
 
 	// Handlers
 	void onCheck(wxCommandEvent &event);

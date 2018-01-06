@@ -16,6 +16,25 @@
 #include <string>
 #include <vector>
 
+// Adds all the needles (delimited by non-alpha characters) to a vector and
+// returns it
+static std::vector<std::string> parse_needles(const std::string &str) {
+	std::vector<std::string> needles;
+	const int strLen = str.length();
+	for (int i = 0; i < strLen; ++i) {
+		int j = i;
+		// We are ignoring everything except alphabets
+		while (isalpha(str[j]) && j < strLen)
+			++j;
+
+		if (i < j) {
+			needles.push_back(str.substr(i, j - i));
+			i = j;
+		}
+	}
+	return needles;
+}
+
 PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	long style)
 	: wxFrame(nullptr, wxID_ANY, title, pos, size, style)
@@ -41,20 +60,33 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	SetSizer(topSizer);
 }
 
+void PFrame::highlightIndices(const std::vector<int> &indices,
+	const std::string &haystack) {
+	// Remove old highlights
+	wxTextAttr textAttr;
+	textAttr.SetBackgroundColour(*wxWHITE);
+	const int haystackLen = haystack.length();
+	inputCtrl->SetStyle(0, haystackLen, textAttr);
+	// Add new highlights
+	textAttr.SetBackgroundColour(*wxYELLOW);
+	for (int i : indices) {
+		int j = i;
+		while (isalpha(haystack[j]) && j < haystackLen)
+			++j;
+
+		if(i < j)
+			inputCtrl->SetStyle(i, j, textAttr);
+	}
+}
+
 wxBEGIN_EVENT_TABLE(PFrame, wxFrame)
 	EVT_BUTTON(wxID_ANY, PFrame::onCheck)
 wxEND_EVENT_TABLE()
 
 void PFrame::onCheck(wxCommandEvent &event) {
 	const std::string haystack((inputCtrl->GetValue()).c_str());
-	const std::string needle((matchCtrl->GetValue()).c_str());
-	// Remove last highlights
-	wxTextAttr textAttr;
-	textAttr.SetBackgroundColour(*wxWHITE);
-	inputCtrl->SetStyle(0, haystack.length(), textAttr);
-	// Add new highlights
-	textAttr.SetBackgroundColour(*wxYELLOW);
-	const std::vector<int> indices = rabinkarp(haystack, needle);
-	for (int i : indices)
-		inputCtrl->SetStyle(i, i + needle.length(), textAttr);
+	const std::string needles((matchCtrl->GetValue()).c_str());
+	const std::vector<int> indices = rabinkarp(haystack,
+		parse_needles(needles));
+	highlightIndices(indices, haystack);
 }

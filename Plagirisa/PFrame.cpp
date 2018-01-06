@@ -13,8 +13,24 @@
 #include <wx/button.h>
 #include <wx/sizer.h>
 
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
+
+static std::string commonWords;
+
+bool update_filter_words() {
+	std::ifstream file("common-words.txt");
+	if (!file)
+		return false;
+
+	// Read the words into "commonWords"
+	std::ostringstream os;
+	os << file.rdbuf();
+	commonWords = os.str();
+	return true;
+}
 
 // Adds all the needles (delimited by non-alpha characters) to a vector and
 // returns it
@@ -28,7 +44,14 @@ static std::vector<std::string> parse_needles(const std::string &str) {
 			++j;
 
 		if (i < j) {
-			needles.push_back(str.substr(i, j - i));
+			// Ignore common and short words
+			// (they just increase the likelihood of false positives)
+			const std::string needle = str.substr(i, j - i);
+			if (needle.length() < 4 ||
+				rabinkarp(commonWords, needle).size() > 0)
+				continue;
+
+			needles.push_back(needle);
 			i = j;
 		}
 	}

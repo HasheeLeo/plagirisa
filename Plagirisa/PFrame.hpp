@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+bool update_filter_words();
+
 class PFrame : public wxFrame {
 public:
 	PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,

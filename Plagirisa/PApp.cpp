@@ -18,6 +18,9 @@ extern const wxString APP_NAME = "Plagirisa";
 IMPLEMENT_APP(PApp)
 
 bool PApp::OnInit() {
+	// Read the filter words file upon startup
+	update_filter_words();
+
 	// Set the window size according to the screen size.
 	const wxRect screenRect = wxDisplay().GetClientArea();
 	PFrame *mainFrame = new PFrame(APP_NAME, wxPoint(0, 0),

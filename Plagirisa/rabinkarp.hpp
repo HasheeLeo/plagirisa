@@ -12,7 +12,10 @@
 #include <vector>
 #include <string>
 
+// Multiple pattern overload
 std::vector<int> rabinkarp(const std::string &text,
 	const std::vector<std::string> &pattern);
+// Single pattern overload
+std::vector<int> rabinkarp(const std::string &text, const std::string &pattern);
 
 #endif // RABINKARP_HPP

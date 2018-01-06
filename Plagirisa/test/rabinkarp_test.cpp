@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-void rabinkarp_test() {
+static void multiplepattern_test() {
     const std::string text1 = "The quick brown fox jumps over the lazy dog!\n";
 	const std::vector<std::string> patterns1 = { "brown", "over", "mps", "og",
 		"wow" };
@@ -38,5 +38,27 @@ void rabinkarp_test() {
 	assert(indices[5] == 12);
     assert(indices.size() == 6);
 
-    std::cout << "rabinkarp: All tests passed.\n";
+    std::cout << "rabinkarp_multiplepattern: All tests passed.\n";
+}
+
+static void singlepattern_test() {
+	const char *text1 = "The quick brown fox jumps over the lazy dog!\n";
+	std::vector<int> indices = rabinkarp(text1, "brown");
+	assert(indices[0] == 10);
+	assert(indices.size() == 1);
+
+	const char *text2 = "aabaacaadaabaaba";
+	indices = rabinkarp(text2, "aaba");
+	assert(indices[0] == 0);
+	assert(indices[1] == 9);
+	assert(indices[2] == 12);
+	assert(indices.size() == 3);
+
+	std::cout << "rabinkarp_singlepattern: All tests passed.\n";
+}
+
+void rabinkarp_test() {
+	singlepattern_test();
+	multiplepattern_test();
+	std::cout << "rabinkarp: All tests passed.\n";
 }

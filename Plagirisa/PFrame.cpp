@@ -11,6 +11,8 @@
 #include "rabinkarp.hpp"
 
 #include <wx/button.h>
+#include <wx/filedlg.h>
+#include <wx/menu.h>
 #include <wx/sizer.h>
 
 #include <fstream>
@@ -62,6 +64,13 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	long style)
 	: wxFrame(nullptr, wxID_ANY, title, pos, size, style)
 {
+	// Create and set menu
+	wxMenu *menuFile = new wxMenu;
+	menuFile->Append(MENUFILE_OPEN, "&Open\tCtrl+O");
+	wxMenuBar *menu = new wxMenuBar;
+	menu->Append(menuFile, "&File");
+	SetMenuBar(menu);
+
 	// Create and add the controls
 	wxBoxSizer *horizSizer = new wxBoxSizer(wxHORIZONTAL);
 	horizSizer->AddSpacer(15);
@@ -107,6 +116,7 @@ void PFrame::highlightIndices(const std::vector<int> &indices,
 
 wxBEGIN_EVENT_TABLE(PFrame, wxFrame)
 	EVT_BUTTON(wxID_ANY, PFrame::onCheck)
+	EVT_MENU(MENUFILE_OPEN, PFrame::onMenuFileOpen)
 wxEND_EVENT_TABLE()
 
 void PFrame::onCheck(wxCommandEvent &event) {
@@ -115,4 +125,23 @@ void PFrame::onCheck(wxCommandEvent &event) {
 	const std::vector<int> indices = rabinkarp(haystack,
 		parse_needles(needles));
 	highlightIndices(indices, haystack);
+}
+
+void PFrame::onMenuFileOpen(wxCommandEvent &event) {
+	wxFileDialog openFileDialog(this, "Select a text file", "", "",
+		"Text File (*.txt)|*.txt", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return;
+
+	const std::string filepath = openFileDialog.GetPath();
+	std::ifstream file(filepath);
+	if (!file) {
+		wxMessageBox("Access denied to given file.", "Error",
+			wxOK | wxICON_ERROR, this);
+		return;
+	}
+
+	std::ostringstream os;
+	os << file.rdbuf();
+	inputCtrl->SetValue(os.str());
 }

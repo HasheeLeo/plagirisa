@@ -11,6 +11,7 @@
 
 #include <wx/frame.h>
 #include <wx/textctrl.h>
+#include <wx/stattext.h>
 
 #include <string>
 #include <vector>
@@ -23,6 +24,7 @@ public:
 		long style = wxDEFAULT_FRAME_STYLE);
 
 private:
+	wxStaticText *plagiarismLabel;
 	wxTextCtrl *inputCtrl;
 	wxTextCtrl *matchCtrl;
 

@@ -75,6 +75,9 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	horizSizer->AddSpacer(15);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+	plagiarismLabel = new wxStaticText(this, wxID_ANY, "Plagiarism: 0%");
+	plagiarismLabel->SetFont(wxFont(wxFontInfo(14)));
+	topSizer->Add(plagiarismLabel, 0, wxCENTER);
 	topSizer->AddSpacer(10);
 	topSizer->Add(horizSizer, 1, wxEXPAND);
 	topSizer->AddSpacer(15);

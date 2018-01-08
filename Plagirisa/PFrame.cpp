@@ -74,6 +74,7 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	// Create and add the controls
 	inputCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
 		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
+	inputCtrl->SetFont(wxFont(wxFontInfo(11)));
 	wxBoxSizer *controlLabelSizer1 = new wxBoxSizer(wxVERTICAL);
 	controlLabelSizer1->Add(inputCtrl, 1, wxEXPAND);
 	inputFilename = new wxStaticText(this, wxID_ANY, "Filename.txt");
@@ -83,6 +84,7 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 
 	matchCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
 		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
+	matchCtrl->SetFont(wxFont(wxFontInfo(11)));
 	wxBoxSizer *controlLabelSizer2 = new wxBoxSizer(wxVERTICAL);
 	controlLabelSizer2->Add(matchCtrl, 1, wxEXPAND);
 	matchFilename = new wxStaticText(this, wxID_ANY, "Filename.txt");

@@ -77,7 +77,7 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	inputCtrl->SetFont(wxFont(wxFontInfo(11)));
 	wxBoxSizer *controlLabelSizer1 = new wxBoxSizer(wxVERTICAL);
 	controlLabelSizer1->Add(inputCtrl, 1, wxEXPAND);
-	inputFilename = new wxStaticText(this, wxID_ANY, "Filename.txt");
+	inputFilename = new wxStaticText(this, wxID_ANY, "");
 	inputFilename->SetFont(wxFont(wxFontInfo(12)));
 	controlLabelSizer1->AddSpacer(10);
 	controlLabelSizer1->Add(inputFilename, 0, wxCENTER);
@@ -87,7 +87,7 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	matchCtrl->SetFont(wxFont(wxFontInfo(11)));
 	wxBoxSizer *controlLabelSizer2 = new wxBoxSizer(wxVERTICAL);
 	controlLabelSizer2->Add(matchCtrl, 1, wxEXPAND);
-	matchFilename = new wxStaticText(this, wxID_ANY, "Filename.txt");
+	matchFilename = new wxStaticText(this, wxID_ANY, "");
 	matchFilename->SetFont(wxFont(wxFontInfo(12)));
 	controlLabelSizer2->AddSpacer(10);
 	controlLabelSizer2->Add(matchFilename, 0, wxCENTER);
@@ -100,7 +100,7 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	horizSizer->AddSpacer(15);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
-	plagiarismLabel = new wxStaticText(this, wxID_ANY, "Plagiarism: 0%");
+	plagiarismLabel = new wxStaticText(this, wxID_ANY, "0%");
 	plagiarismLabel->SetFont(wxFont(wxFontInfo(14)));
 	topSizer->Add(plagiarismLabel, 0, wxCENTER);
 	topSizer->AddSpacer(10);

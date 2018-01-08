@@ -73,7 +73,7 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 
 	// Create and add the controls
 	inputCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
+		wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH2);
 	inputCtrl->SetFont(wxFont(wxFontInfo(11)));
 	wxBoxSizer *controlLabelSizer1 = new wxBoxSizer(wxVERTICAL);
 	controlLabelSizer1->Add(inputCtrl, 1, wxEXPAND);
@@ -83,7 +83,7 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	controlLabelSizer1->Add(inputFilename, 0, wxCENTER);
 
 	matchCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
+		wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH2);
 	matchCtrl->SetFont(wxFont(wxFontInfo(11)));
 	wxBoxSizer *controlLabelSizer2 = new wxBoxSizer(wxVERTICAL);
 	controlLabelSizer2->Add(matchCtrl, 1, wxEXPAND);

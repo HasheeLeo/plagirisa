@@ -11,6 +11,8 @@
 #include "rabinkarp.hpp"
 
 #include <wx/button.h>
+#include <wx/filedlg.h>
+#include <wx/menu.h>
 #include <wx/sizer.h>
 
 #include <fstream>
@@ -62,22 +64,47 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	long style)
 	: wxFrame(nullptr, wxID_ANY, title, pos, size, style)
 {
+	// Create and set menu
+	wxMenu *menuFile = new wxMenu;
+	menuFile->Append(MENUFILE_OPEN, "&Open\tCtrl+O");
+	wxMenuBar *menu = new wxMenuBar;
+	menu->Append(menuFile, "&File");
+	SetMenuBar(menu);
+
 	// Create and add the controls
+	inputCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH2);
+	inputCtrl->SetFont(wxFont(wxFontInfo(11)));
+	wxBoxSizer *controlLabelSizer1 = new wxBoxSizer(wxVERTICAL);
+	controlLabelSizer1->Add(inputCtrl, 1, wxEXPAND);
+	inputFilename = new wxStaticText(this, wxID_ANY, "");
+	inputFilename->SetFont(wxFont(wxFontInfo(12)));
+	controlLabelSizer1->AddSpacer(10);
+	controlLabelSizer1->Add(inputFilename, 0, wxCENTER);
+
+	matchCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+		wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxTE_RICH2);
+	matchCtrl->SetFont(wxFont(wxFontInfo(11)));
+	wxBoxSizer *controlLabelSizer2 = new wxBoxSizer(wxVERTICAL);
+	controlLabelSizer2->Add(matchCtrl, 1, wxEXPAND);
+	matchFilename = new wxStaticText(this, wxID_ANY, "");
+	matchFilename->SetFont(wxFont(wxFontInfo(12)));
+	controlLabelSizer2->AddSpacer(10);
+	controlLabelSizer2->Add(matchFilename, 0, wxCENTER);
+
 	wxBoxSizer *horizSizer = new wxBoxSizer(wxHORIZONTAL);
 	horizSizer->AddSpacer(15);
-	inputCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
-	horizSizer->Add(inputCtrl, 1, wxEXPAND);
+	horizSizer->Add(controlLabelSizer1, 1, wxEXPAND);
 	horizSizer->AddSpacer(20);
-	matchCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
-	horizSizer->Add(matchCtrl, 1, wxEXPAND);
+	horizSizer->Add(controlLabelSizer2, 1, wxEXPAND);
 	horizSizer->AddSpacer(15);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
+	plagiarismLabel = new wxStaticText(this, wxID_ANY, "0%");
+	plagiarismLabel->SetFont(wxFont(wxFontInfo(14)));
+	topSizer->Add(plagiarismLabel, 0, wxCENTER);
 	topSizer->AddSpacer(10);
 	topSizer->Add(horizSizer, 1, wxEXPAND);
-	topSizer->AddSpacer(15);
 	topSizer->Add(new wxButton(this, wxID_ANY, "Check"), 0, wxCENTER);
 	topSizer->AddSpacer(10);
 	SetSizer(topSizer);
@@ -104,6 +131,7 @@ void PFrame::highlightIndices(const std::vector<int> &indices,
 
 wxBEGIN_EVENT_TABLE(PFrame, wxFrame)
 	EVT_BUTTON(wxID_ANY, PFrame::onCheck)
+	EVT_MENU(MENUFILE_OPEN, PFrame::onMenuFileOpen)
 wxEND_EVENT_TABLE()
 
 void PFrame::onCheck(wxCommandEvent &event) {
@@ -112,4 +140,26 @@ void PFrame::onCheck(wxCommandEvent &event) {
 	const std::vector<int> indices = rabinkarp(haystack,
 		parse_needles(needles));
 	highlightIndices(indices, haystack);
+}
+
+void PFrame::onMenuFileOpen(wxCommandEvent &event) {
+	wxFileDialog openFileDialog(this, "Select a text file", "", "",
+		"Text File (*.txt)|*.txt", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return;
+
+	const std::string filepath = openFileDialog.GetPath();
+	std::ifstream file(filepath);
+	if (!file) {
+		wxMessageBox("Access denied to given file.", "Error",
+			wxOK | wxICON_ERROR, this);
+		return;
+	}
+
+	std::ostringstream os;
+	os << file.rdbuf();
+	inputCtrl->SetValue(os.str());
+
+	// Set the label
+	inputFilename->SetLabel(openFileDialog.GetFilename());
 }

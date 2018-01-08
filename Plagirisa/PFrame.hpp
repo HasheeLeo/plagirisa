@@ -11,6 +11,7 @@
 
 #include <wx/frame.h>
 #include <wx/textctrl.h>
+#include <wx/stattext.h>
 
 #include <string>
 #include <vector>
@@ -23,14 +24,20 @@ public:
 		long style = wxDEFAULT_FRAME_STYLE);
 
 private:
+	static constexpr int MENUFILE_OPEN = 101;
+
+	wxStaticText *plagiarismLabel;
 	wxTextCtrl *inputCtrl;
+	wxStaticText *inputFilename;
 	wxTextCtrl *matchCtrl;
+	wxStaticText *matchFilename;
 
 	void highlightIndices(const std::vector<int> &indices,
 		const std::string &haystack);
 
 	// Handlers
 	void onCheck(wxCommandEvent &event);
+	void onMenuFileOpen(wxCommandEvent &event);
 
 	wxDECLARE_EVENT_TABLE();
 };

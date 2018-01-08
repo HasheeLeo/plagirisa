@@ -72,15 +72,29 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	SetMenuBar(menu);
 
 	// Create and add the controls
-	wxBoxSizer *horizSizer = new wxBoxSizer(wxHORIZONTAL);
-	horizSizer->AddSpacer(15);
 	inputCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
 		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
-	horizSizer->Add(inputCtrl, 1, wxEXPAND);
-	horizSizer->AddSpacer(20);
+	wxBoxSizer *controlLabelSizer1 = new wxBoxSizer(wxVERTICAL);
+	controlLabelSizer1->Add(inputCtrl, 1, wxEXPAND);
+	inputFilename = new wxStaticText(this, wxID_ANY, "Filename.txt");
+	inputFilename->SetFont(wxFont(wxFontInfo(12)));
+	controlLabelSizer1->AddSpacer(10);
+	controlLabelSizer1->Add(inputFilename, 0, wxCENTER);
+
 	matchCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
 		wxDefaultSize, wxTE_MULTILINE | wxTE_RICH2);
-	horizSizer->Add(matchCtrl, 1, wxEXPAND);
+	wxBoxSizer *controlLabelSizer2 = new wxBoxSizer(wxVERTICAL);
+	controlLabelSizer2->Add(matchCtrl, 1, wxEXPAND);
+	matchFilename = new wxStaticText(this, wxID_ANY, "Filename.txt");
+	matchFilename->SetFont(wxFont(wxFontInfo(12)));
+	controlLabelSizer2->AddSpacer(10);
+	controlLabelSizer2->Add(matchFilename, 0, wxCENTER);
+
+	wxBoxSizer *horizSizer = new wxBoxSizer(wxHORIZONTAL);
+	horizSizer->AddSpacer(15);
+	horizSizer->Add(controlLabelSizer1, 1, wxEXPAND);
+	horizSizer->AddSpacer(20);
+	horizSizer->Add(controlLabelSizer2, 1, wxEXPAND);
 	horizSizer->AddSpacer(15);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
@@ -89,7 +103,6 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	topSizer->Add(plagiarismLabel, 0, wxCENTER);
 	topSizer->AddSpacer(10);
 	topSizer->Add(horizSizer, 1, wxEXPAND);
-	topSizer->AddSpacer(15);
 	topSizer->Add(new wxButton(this, wxID_ANY, "Check"), 0, wxCENTER);
 	topSizer->AddSpacer(10);
 	SetSizer(topSizer);
@@ -144,4 +157,7 @@ void PFrame::onMenuFileOpen(wxCommandEvent &event) {
 	std::ostringstream os;
 	os << file.rdbuf();
 	inputCtrl->SetValue(os.str());
+
+	// Set the label
+	inputFilename->SetLabel(openFileDialog.GetFilename());
 }

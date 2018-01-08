@@ -28,7 +28,9 @@ private:
 
 	wxStaticText *plagiarismLabel;
 	wxTextCtrl *inputCtrl;
+	wxStaticText *inputFilename;
 	wxTextCtrl *matchCtrl;
+	wxStaticText *matchFilename;
 
 	void highlightIndices(const std::vector<int> &indices,
 		const std::string &haystack);

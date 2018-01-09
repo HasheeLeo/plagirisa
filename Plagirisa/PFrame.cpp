@@ -113,6 +113,29 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	SetSizer(topSizer);
 }
 
+// Calculates the plagiarism percentage
+int PFrame::calculate(const std::string &haystack, int matchedWords) {
+	const int haystackLen = haystack.length();
+	int totalWords = 0;
+	// Calculate the total words in haystack, ignoring short and common words
+	for (int i = 0; i < haystackLen; ++i) {
+		int j = i;
+		// Ignore unicode characters (isalpha() does not work with them)
+		while (isalpha(haystack[j] < 0 ? 0 : haystack[j]) && j < haystackLen)
+			++j;
+
+		if (i < j) {
+			// Ignore common and short words
+			const std::string word = haystack.substr(i, j - i);
+			if (word.length() >= 4 && rabinkarp(commonWords, word).empty())
+				++totalWords;
+
+			i = j;
+		}
+	}
+	return (static_cast<double>(matchedWords) / totalWords) * 100;
+}
+
 // The main plagiarism detection function. This is the heart of the program
 void PFrame::detect(const std::string &haystack) {
 	// To ensure a file does not match to itself
@@ -149,6 +172,10 @@ void PFrame::detect(const std::string &haystack) {
 	matchCtrl->SetValue(bestContent);
 	matchFilename->SetLabelText(bestFilename);
 	highlightIndices(bestIndices, haystack);
+	wxString plagiarismPercentage;
+	// convert int to wxString
+	plagiarismPercentage << calculate(haystack, bestIndices.size());
+	plagiarismLabel->SetLabelText(plagiarismPercentage + "%");
 }
 
 void PFrame::highlightIndices(const std::vector<int> &indices,

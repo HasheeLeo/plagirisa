@@ -32,6 +32,9 @@ private:
 	wxTextCtrl *matchCtrl;
 	wxStaticText *matchFilename;
 
+	// Calculates the plagiarism percentage
+	int calculate(const std::string &haystack, int matchedWords);
+
 	// The main plagiarism detection function. This is the heart of the program
 	void detect(const std::string &haystack);
 

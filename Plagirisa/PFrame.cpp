@@ -11,6 +11,8 @@
 #include "rabinkarp.hpp"
 
 #include <wx/button.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
 #include <wx/filedlg.h>
 #include <wx/menu.h>
 #include <wx/sizer.h>
@@ -42,7 +44,8 @@ static std::vector<std::string> parse_needles(const std::string &str) {
 	for (int i = 0; i < strLen; ++i) {
 		int j = i;
 		// We are ignoring everything except alphabets
-		while (isalpha(str[j]) && j < strLen)
+		// Ignore unicode characters (isalpha() does not work with them)
+		while (isalpha(str[j] < 0 ? 0 : str[j]) && j < strLen)
 			++j;
 
 		if (i < j) {
@@ -110,6 +113,44 @@ PFrame::PFrame(const wxString &title, const wxPoint &pos, const wxSize &size,
 	SetSizer(topSizer);
 }
 
+// The main plagiarism detection function. This is the heart of the program
+void PFrame::detect(const std::string &haystack) {
+	// To ensure a file does not match to itself
+	const wxString ignoreFilename = inputFilename->GetLabelText();
+	const wxDir dataDir("data");
+	// Loop through every file in the data directory and match them with the
+	// input file. Pick the best match.
+	std::vector<int> bestIndices;
+	std::string bestContent;
+	wxString bestFilename;
+	wxString filename;
+	bool cont = dataDir.GetFirst(&filename, wxEmptyString,
+		wxDIR_FILES | wxDIR_HIDDEN | wxDIR_NO_FOLLOW);
+	for (; cont != false; cont = dataDir.GetNext(&filename)) {
+		if (filename == ignoreFilename)
+			continue;
+
+		const wxString filepath(dataDir.GetNameWithSep() + filename);
+		std::ifstream file(std::string(filepath.c_str()));
+		if (!file)
+			return;
+
+		std::ostringstream os;
+		os << file.rdbuf();
+		const std::string content = os.str();
+		const std::vector<int> indices = rabinkarp(haystack,
+			parse_needles(content));
+		if (indices.size() > bestIndices.size()) {
+			bestIndices = indices;
+			bestFilename = filename;
+			bestContent = content;
+		}
+	}
+	matchCtrl->SetValue(bestContent);
+	matchFilename->SetLabelText(bestFilename);
+	highlightIndices(bestIndices, haystack);
+}
+
 void PFrame::highlightIndices(const std::vector<int> &indices,
 	const std::string &haystack) {
 	// Remove old highlights
@@ -121,7 +162,8 @@ void PFrame::highlightIndices(const std::vector<int> &indices,
 	textAttr.SetBackgroundColour(*wxYELLOW);
 	for (int i : indices) {
 		int j = i;
-		while (isalpha(haystack[j]) && j < haystackLen)
+		// Ignore unicode characters (isalpha() does not work with them)
+		while (isalpha(haystack[j] < 0 ? 0 : haystack[j]) && j < haystackLen)
 			++j;
 
 		if(i < j)
@@ -136,10 +178,10 @@ wxEND_EVENT_TABLE()
 
 void PFrame::onCheck(wxCommandEvent &event) {
 	const std::string haystack((inputCtrl->GetValue()).c_str());
-	const std::string needles((matchCtrl->GetValue()).c_str());
-	const std::vector<int> indices = rabinkarp(haystack,
-		parse_needles(needles));
-	highlightIndices(indices, haystack);
+	if (haystack.empty())
+		return;
+
+	detect(haystack);
 }
 
 void PFrame::onMenuFileOpen(wxCommandEvent &event) {
@@ -161,5 +203,5 @@ void PFrame::onMenuFileOpen(wxCommandEvent &event) {
 	inputCtrl->SetValue(os.str());
 
 	// Set the label
-	inputFilename->SetLabel(openFileDialog.GetFilename());
+	inputFilename->SetLabelText(openFileDialog.GetFilename());
 }

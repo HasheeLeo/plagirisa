@@ -32,6 +32,9 @@ private:
 	wxTextCtrl *matchCtrl;
 	wxStaticText *matchFilename;
 
+	// The main plagiarism detection function. This is the heart of the program
+	void detect(const std::string &haystack);
+
 	void highlightIndices(const std::vector<int> &indices,
 		const std::string &haystack);
 

@@ -52,11 +52,9 @@ static std::vector<std::string> parse_needles(const std::string &str) {
 			// Ignore common and short words
 			// (they just increase the likelihood of false positives)
 			const std::string needle = str.substr(i, j - i);
-			if (needle.length() < 4 ||
-				rabinkarp(commonWords, needle).size() > 0)
-				continue;
+			if (needle.length() >= 4 && rabinkarp(commonWords, needle).empty())
+				needles.push_back(needle);
 
-			needles.push_back(needle);
 			i = j;
 		}
 	}

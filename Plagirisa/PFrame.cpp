@@ -171,15 +171,19 @@ void PFrame::detect(const std::string &haystack) {
 	}
 	matchCtrl->SetValue(bestContent);
 	matchFilename->SetLabelText(bestFilename);
-	highlightIndices(bestIndices, haystack);
+	bestIndices = highlightIndices(bestIndices, haystack);
 	wxString plagiarismPercentage;
 	// convert int to wxString
 	plagiarismPercentage << calculate(haystack, bestIndices.size());
 	plagiarismLabel->SetLabelText(plagiarismPercentage + "%");
 }
 
-void PFrame::highlightIndices(const std::vector<int> &indices,
+// Highlights the matching words and removes any indices which may have been the
+// result of a collision (if the word at the index is a common or short word, it 
+// considers it a result of collision)
+std::vector<int> PFrame::highlightIndices(const std::vector<int> &indices,
 	const std::string &haystack) {
+	std::vector<int> fixedIndices = indices;
 	// Remove old highlights
 	wxTextAttr textAttr;
 	textAttr.SetBackgroundColour(*wxWHITE);
@@ -193,9 +197,23 @@ void PFrame::highlightIndices(const std::vector<int> &indices,
 		while (isalpha(haystack[j] < 0 ? 0 : haystack[j]) && j < haystackLen)
 			++j;
 
-		if(i < j)
-			inputCtrl->SetStyle(i, j, textAttr);
+		if (i < j) {
+			const std::string word = haystack.substr(i, j - i);
+			if (j - i >= 4 && rabinkarp(commonWords, word).empty()) {
+				inputCtrl->SetStyle(i, j, textAttr);
+			}
+			else {
+				// Remove the faulty index
+				//
+				auto it = std::find(fixedIndices.begin(),
+					fixedIndices.end(), i);
+
+				if (it != fixedIndices.end())
+					fixedIndices.erase(it);
+			}
+		}
 	}
+	return fixedIndices;
 }
 
 wxBEGIN_EVENT_TABLE(PFrame, wxFrame)

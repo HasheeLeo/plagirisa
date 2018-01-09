@@ -38,7 +38,10 @@ private:
 	// The main plagiarism detection function. This is the heart of the program
 	void detect(const std::string &haystack);
 
-	void highlightIndices(const std::vector<int> &indices,
+	// Highlights the matching words and removes any indices which may have been
+	// the result of a collision (if the word at the index is a common or short
+	// word, it considers it a result of collision)
+	std::vector<int> highlightIndices(const std::vector<int> &indices,
 		const std::string &haystack);
 
 	// Handlers

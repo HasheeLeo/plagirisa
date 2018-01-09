@@ -17,6 +17,7 @@
 #include <wx/menu.h>
 #include <wx/sizer.h>
 
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -233,7 +234,7 @@ void PFrame::onMenuFileOpen(wxCommandEvent &event) {
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 
-	const std::string filepath = openFileDialog.GetPath();
+	const std::string filepath(openFileDialog.GetPath().c_str());
 	std::ifstream file(filepath);
 	if (!file) {
 		wxMessageBox("Access denied to given file.", "Error",
